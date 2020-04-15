@@ -5,6 +5,7 @@ const passport = require("passport");
 const localStrategy = require("passport-local");
 const methodeOverride = require("method-override");
 const flash = require("connect-flash");
+const dotenv = require("dotenv").config();
 
 var Campground = require("./models/campground");
 var Comment = require("./models/comment");
@@ -14,11 +15,17 @@ var commentRoutes = require("./routes/comments");
 var campgroundsRoutes = require("./routes/campgrounds");
 var indexRoutes = require("./routes/index");
 
-mongoose.connect("mongodb://localhost/yelp_camp", {
+mongoose.connect(process.env.DB_URI, {
 	useNewUrlParser: true,
+	useCreateIndex: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false,
-  	serverSelectionTimeoutMS: 5000});
+  	serverSelectionTimeoutMS: 5000}).then(() => {
+	console.log("Connected to DB!");
+}).catch(err => {
+	console.log("ERROR: " + err.message);
+});
+
 app.use(express.urlencoded({extended:true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
@@ -49,6 +56,6 @@ app.use(indexRoutes);
 app.use("/campgrounds", campgroundsRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
-app.listen(3000, () => {
-	console.log("Server has started listening on port 3000!");
+app.listen(process.env.PORT || 3000, () => {
+	console.log("Server has started listening!");
 });
