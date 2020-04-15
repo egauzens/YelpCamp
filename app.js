@@ -9,7 +9,6 @@ const flash = require("connect-flash");
 var Campground = require("./models/campground");
 var Comment = require("./models/comment");
 var User = require("./models/user");
-var seedDb = require("./seeds");
 
 var commentRoutes = require("./routes/comments");
 var campgroundsRoutes = require("./routes/campgrounds");
@@ -25,7 +24,6 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodeOverride("_method"));
 app.use(flash());
-//seedDb();
 
 // Passport Configuration
 app.use(require("express-session")({
